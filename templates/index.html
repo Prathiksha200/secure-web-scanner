@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Secure Web Scanner</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Secure Web Application Vulnerability Scanner</h1>
+    <p>Enter a website URL (example: example.com)</p>
+
+    <form method="post">
+      <input name="target" placeholder="example.com or https://example.com" required>
+      <button type="submit">Scan Website</button>
+    </form>
+
+    <p class="note">
+      ⚠ This tool performs *only safe checks* (SSL expiry, security headers, HTTPS issues).  
+      It does **not** perform hacking or illegal tests.
+    </p>
+  </div>
+</body>
+</html>

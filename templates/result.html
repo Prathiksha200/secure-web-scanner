@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Scan Results</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Scan Results for: <span>{{ scan.url }}</span></h1>
+
+    <div class="card">
+      <h3>Risk Score: <span class="score">{{ scan.risk.score }}</span> ({{ scan.risk.severity }})</h3>
+      <h4>Issues Found:</h4>
+      <ul>
+        {% for issue in scan.risk.issues %}
+          <li>{{ issue }}</li>
+        {% else %}
+          <li>No issues detected.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>HTTP Status</h3>
+      {% if scan.status.ok %}
+        <p>Status Code: {{ scan.status.status_code }}</p>
+      {% else %}
+        <p class="danger">Error: {{ scan.status.error }}</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>SSL Certificate</h3>
+      {% if scan.ssl_info.ok %}
+        <p>Expires On: {{ scan.ssl_info.expiry }}</p>
+        <p>Days Left: {{ scan.ssl_info.days_left }}</p>
+      {% else %}
+        <p class="danger">SSL Error: {{ scan.ssl_info.error }}</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>Security Headers</h3>
+      <p><strong>Present:</strong> {{ scan.headers_result.present | join(', ') }}</p>
+      <p><strong>Missing:</strong> {{ scan.headers_result.missing | join(', ') }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Mixed Content</h3>
+      {% if scan.mixed_info.secure_scheme %}
+        {% if scan.mixed_info.mixed %}
+          <p class="danger">Mixed content detected!</p>
+          <ul>
+            {% for item in scan.mixed_info.mixed %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No mixed content found.</p>
+        {% endif %}
+      {% else %}
+        <p>Site is HTTP, not HTTPS — mixed content check skipped.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>Server Info</h3>
+      <p>{{ scan.server.server }}</p>
+    </div>
+
+    <a href="{{ url_for('index') }}" class="back">🔙 Scan Another Website</a>
+  </div>
+</body>
+</html>
